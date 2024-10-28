@@ -3,7 +3,7 @@ from functools import reduce
 
 def gerarComplemento(domain, x):
     complements = []
-    for i in range(len(domain.fncs)):
+    for i in range(len(domain.fncs['funcs'])):
         complements.append([])
     for i in x:
         graus = domain.calcularGrauAtivacao(i)
@@ -94,16 +94,32 @@ def SNorma(graus, tipo, value=0):
 
 def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
     for domain in domains:
-        x = np.linspace(domain.inf, domain.sup, 250)
-
         fig, ax = plt.subplots(2, 3, figsize=(12, 9))
 
-        for d in domain.fncs:
-            y = []
-            for i in x:
-                y.append(d.calcularMi(i))
+        x = np.linspace(domain.inf, domain.sup, 250)
+        ys = []
+        match domain.fncs['tipo']:
+            case w if w in ['GS', 'SG', 'SS', 'ZS', 'CC', 'RT', 'LP']:
+                for d in domain.fncs['funcs']:
+                    y = []
+                    for i in x:
+                        y.append(d['func'](d['values'][0], d['values'][1], d['values'][2], d['values'][3], i))
+                    ys.append(y)
+            case w if w in ['TR', 'SN', 'GD']:
+                for d in domain.fncs['funcs']:
+                    y = []
+                    for i in x:
+                        y.append(d['func'](d['values'][0], d['values'][1], d['values'][2], d['values'][3], d['values'][4], i))
+                    ys.append(y)
+            case w if w in ['TP']:
+                for d in domain.fncs['funcs']:
+                    y = []
+                    for i in x:
+                        y.append(d['func'](d['values'][0], d['values'][1], d['values'][2], d['values'][3], d['values'][4], d['values'][5], i))
+                    ys.append(y)
+        for y in ys:
             ax[0, 0].plot(x, y)
-        ax[0, 0].set_title(domain.fncs[0].name)
+        ax[0, 0].set_title(domain.fncs['name'])
         ax[0, 0].grid(True)
 
         cs = gerarComplemento(domain, x)
@@ -150,4 +166,4 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
             ax[1, 2].grid(True)
         
         plt.tight_layout()
-        plt.savefig(directory + domain.fncs[0].name + ".png")
+        plt.savefig(directory + domain.fncs['name'] + ".png")

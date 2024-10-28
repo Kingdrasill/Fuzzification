@@ -52,18 +52,16 @@ def MostrarRelacao(directory = "data/imgs/relations/"):
     inf = 0
     sup = 10
 
-    C1 = Trapezoidal(inf, sup)
-    C1.setValues(0, 4, 6, 10)
+    c1_values = (0, 4, 6, 10)
     c1name = "Trapezoidal"
-    C2 = Sshaped(inf, sup)
-    C2.setValues(1, 5)
+    c2_values = (1, 5)
     c2name = "S-shaped"
 
     x = np.linspace(inf, sup, 250)
     percs_c1, percs_c2 = [], []
     for i in x:
-        percs_c1.append(C1.calcularMi(i))
-        percs_c2.append(C2.calcularMi(i))
+        percs_c1.append(CalcularMiTP(inf, sup, c1_values[0], c1_values[1], c1_values[2], c1_values[3], i))
+        percs_c2.append(CalcularMiSS(inf, sup, c2_values[0], c2_values[1], i))
 
     r1 = relation(TNorma, "M", None, len(percs_c1), len(percs_c2), percs_c1, percs_c2)
     r2 = relation(TNorma, "P", None, len(percs_c1), len(percs_c2), percs_c1, percs_c2)

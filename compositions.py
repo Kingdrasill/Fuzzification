@@ -85,23 +85,20 @@ def save_composition_to_file(x, c1name, c2name, c3name, c1, c2, c3, c1lim, c3lim
 def MostrarComposicao(directory = "data/imgs/compositions/"):
     inf = 0
     sup = 10
-    C1 = Gaussiana(inf, sup)
-    C1.setValues(5, 2)
+
+    c1_values = (5, 2)
     c1name = "Gaussiana"
-    C2 = Sino(inf, sup)
-    C2.setValues(2, 3, 4)
+    c2_values = (2, 3, 4)
     c2name = "Sino"
-    C3 = Laplace(inf, sup)
-    C3.setValues(3, 1)
+    c3_values = (3, 1)
     c3name = "Laplace"
 
     x = np.linspace(inf, sup, 250)
-
     percs_c1, percs_c2, percs_c3 = [], [], []
     for i in x:
-        percs_c1.append(C1.calcularMi(i))
-        percs_c2.append(C2.calcularMi(i))
-        percs_c3.append(C3.calcularMi(i))
+        percs_c1.append(CalcularMiGS(inf, sup, c1_values[0], c1_values[1], i))
+        percs_c2.append(CalcularMiSN(inf, sup, c2_values[0], c2_values[1], c2_values[2], i))
+        percs_c3.append(CalcularMiLP(inf, sup, c3_values[0], c3_values[1], i))
 
     r1 = relation(TNorma, "M", None, len(percs_c1), len(percs_c2), percs_c1, percs_c2)
     r2 = relation(SNorma, "M", None, len(percs_c2), len(percs_c3), percs_c2, percs_c3)

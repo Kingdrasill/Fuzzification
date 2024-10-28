@@ -108,8 +108,4 @@ def MostrarComposicao(directory = "data/imgs/compositions/"):
 
         save_composition_to_file(x, c1name, c2name, c3name, percs_c1, percs_c2, percs_c3, (inf, sup), (inf, sup), cmp, comp, ("compostion-"+comp.lower()), directory)
 
-AcharGrauPertinência()
-domains = AcharGrauAtivacaoFuncoes()
-MostrarOpercacoes(domains)
-MostrarRelacao()
 MostrarComposicao()

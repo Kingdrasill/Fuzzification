@@ -393,3 +393,5 @@ def AcharGrauAtivacaoFuncoes(diterctory="data/imgs/domains/"):
             print(f"\t- mi{i+1}(x1 = {x1}) = {g1} \t - mi{i+1}(x2 = {x2}) = {g2}")
         d.plotarGrauAtivacao(x1, x2, diterctory)
     return domains
+
+domains = AcharGrauAtivacaoFuncoes()

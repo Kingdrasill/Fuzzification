@@ -72,3 +72,5 @@ def MostrarRelacao(directory = "data/imgs/relations/"):
     save_relation_to_file(x, c1name, c2name, percs_c1, percs_c2, (0, 10), (0, 10), r2, "T-norma Produto Algébrico", "relation-tnorma-prd", directory)
     save_relation_to_file(x, c1name, c2name, percs_c1, percs_c2, (0, 10), (0, 10), r3, "T-norma Max Zadeh", "relation-snorma-max", directory)
     save_relation_to_file(x, c1name, c2name, percs_c1, percs_c2, (0, 10), (0, 10), r4, "T-norma Soma Probabilística", "relation-snorma-sum", directory)
+
+MostrarRelacao()

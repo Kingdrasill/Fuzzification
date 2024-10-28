@@ -167,3 +167,5 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
         
         plt.tight_layout()
         plt.savefig(directory + domain.fncs['name'] + ".png")
+
+MostrarOpercacoes(domains)

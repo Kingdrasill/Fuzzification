@@ -207,3 +207,5 @@ def AcharGrauPertinência():
                 else:
                     print("Laplace: Está faltando valor da forma")
     f.close()
+
+AcharGrauPertinência()

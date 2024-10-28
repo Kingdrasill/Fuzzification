@@ -1,7 +1,7 @@
 from domain import *
 from functools import reduce
 
-def gerarComplemento(domain, x):
+def Complemento(domain, x):
     complements = []
     for i in range(len(domain.fncs['funcs'])):
         complements.append([])
@@ -11,14 +11,14 @@ def gerarComplemento(domain, x):
             complements[j].append(1 - graus[j])
     return complements
 
-def gerarUniao(domain, x):
+def Uniao(domain, x):
     union = []
     for i in x:
         graus = domain.calcularGrauAtivacao(i)
         union.append(max(graus))
     return union
 
-def gerarIntersercao(domain, x):
+def Intersercao(domain, x):
     intersection = []
     for i in x:
         graus = domain.calcularGrauAtivacao(i)
@@ -122,13 +122,13 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
         ax[0, 0].set_title(domain.fncs['name'])
         ax[0, 0].grid(True)
 
-        cs = gerarComplemento(domain, x)
+        cs = Complemento(domain, x)
         for f in cs:
             ax[1, 0].plot(x, f)
         ax[1, 0].set_title("Complementos")
         ax[1, 0].grid(True)
 
-        u = gerarUniao(domain, x)
+        u = Uniao(domain, x)
         ax[0, 1].plot(x, u, color="purple")
         ax[0, 1].set_title("União")
         ax[0, 1].grid(True)
@@ -147,7 +147,7 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
             ax[1, 1].grid(True)
 
 
-        i = gerarIntersercao(domain, x)
+        i = Intersercao(domain, x)
         ax[0, 2].plot(x, i, color="purple")
         ax[0, 2].set_title("Interseção")
         ax[0, 2].grid(True)

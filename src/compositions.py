@@ -80,7 +80,7 @@ def PlotarComposicao(u, v, w, relacao_uv, name_uv, relacao_vw, name_vw, composic
     plt.savefig(directory + filename + ".png")
     plt.close()
 
-def MostrarComposicao(directory = "data/imgs/compositions/"):
+def MostrarComposicao(directory = "imgs/compositions/"):
     u = [2, 12]
     v = [1, 7, 13]
     w = [4, 8]

@@ -381,7 +381,7 @@ def gntDomain(inf, sup, function, qtd):
 
     return domain
 
-def AcharGrauAtivacaoFuncoes(diterctory="data/imgs/domains/"):
+def AcharGrauAtivacaoFuncoes(diterctory="imgs/domains/"):
     inf = 0
     sup = 10
     qtd = rd.choice([4, 5, 6])

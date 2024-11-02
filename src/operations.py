@@ -92,7 +92,7 @@ def SNorma(graus, tipo, value=0):
                 return 1
     return None
 
-def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
+def MostrarOpercacoes(domains, directory = "imgs/operations/"):
     for domain in domains:
         fig, ax = plt.subplots(2, 3, figsize=(12, 9))
 

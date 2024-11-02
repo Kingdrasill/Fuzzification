@@ -47,7 +47,7 @@ def PlotartRelacao(lim_c1, lim_c2, name_c1, name_c2, c1, c2, mi_c1, mi_c2, relat
     plt.savefig(directory + filename + ".png")
     plt.close()
 
-def MostrarRelacao(directory = "data/imgs/relations/"):
+def MostrarRelacao(ttipos, tvalores, tnomes, stipos, svalores, snomes, directory = "imgs/relations/"):
     limMeiaIdade = (25, 55)
     limAlto = (1.60, 1.90)
 
@@ -56,18 +56,15 @@ def MostrarRelacao(directory = "data/imgs/relations/"):
 
     miIdade = []
     miAltura = []
-    for i, a in zip(idades, alturas):
+    for i in idades:
         miIdade.append(CalcularMiSN(limMeiaIdade[0], limMeiaIdade[1], 6, 2.5, 40, i))
+    for a in alturas:
         miAltura.append(CalcularMiTR(limAlto[0], limAlto[1], 1.60, 1.90, 1.90, a))
 
-    relacaoTNormaM = Relacao(TNorma, "M", None, len(miIdade), len(miAltura), miIdade, miAltura)
-    PlotartRelacao(limMeiaIdade, limAlto, "Conjunto Meia-Idade", "Conjunto Alto", idades, alturas, miIdade, miAltura, relacaoTNormaM, directory, "relacao-TNorma-M", "Pessoas Altas e de Meia-Idade (TNorma Min Zadeh)")
-    
-    relacaoTNormaP = Relacao(TNorma, "P", None, len(miIdade), len(miAltura), miIdade, miAltura)
-    PlotartRelacao(limMeiaIdade, limAlto, "Conjunto Meia-Idade", "Conjunto Alto", idades, alturas, miIdade, miAltura, relacaoTNormaP, directory, "relacao-TNorma-P", "Pessoas Altas e de Meia-Idade (TNorma Produto Algébrico)")
-    
-    relacaoSNormaM = Relacao(SNorma, "M", None, len(miIdade), len(miAltura), miIdade, miAltura)
-    PlotartRelacao(limMeiaIdade, limAlto, "Conjunto Meia-Idade", "Conjunto Alto", idades, alturas, miIdade, miAltura, relacaoSNormaM, directory, "relacao-SNorma-M", "Pessoas Altas ou de Meia-Idade (SNorma Max Zadeh)")
-    
-    relacaoSNormaP = Relacao(SNorma, "P", None, len(miIdade), len(miAltura), miIdade, miAltura)
-    PlotartRelacao(limMeiaIdade, limAlto, "Conjunto Meia-Idade", "Conjunto Alto", idades, alturas, miIdade, miAltura, relacaoSNormaP, directory, "relacao-SNorma-P", "Pessoas Altas ou de Meia-Idade (SNorma Soma Probabilística)")
+    for i in range(len(ttipos)):
+        relacao = Relacao(TNorma, ttipos[i], tvalores[i], len(miIdade), len(miAltura), miIdade, miAltura)
+        PlotartRelacao(limMeiaIdade, limAlto, "Conjunto Meia-Idade", "Conjunto Alto", idades, alturas, miIdade, miAltura, relacao, directory, "relacao-TNorma-"+ttipos[i], "Pessoas Altas e de Meia-Idade (T-Norma {})".format(tnomes[i]))
+   
+    for i in range(len(stipos)):
+        relacao = Relacao(SNorma, stipos[i], svalores[i], len(miIdade), len(miAltura), miIdade, miAltura)
+        PlotartRelacao(limMeiaIdade, limAlto, "Conjunto Meia-Idade", "Conjunto Alto", idades, alturas, miIdade, miAltura, relacao, directory, "relacao-SNorma-"+stipos[i], "Pessoas Altas ou de Meia-Idade (S-Norma {})".format(snomes[i]))

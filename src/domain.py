@@ -1,63 +1,53 @@
-from functions import *
+from src.functions import *
 import random as rd
 import matplotlib.pyplot as plt
 import numpy as np
 
 class Domain:
-    def __init__(self, inferior, superior, funcs):
+    def __init__(self, inferior, superior, funcs, name):
         self.inf = inferior
         self.sup = superior
-        self.fncs = funcs
+        self.funcs = funcs
+        self.name = name
 
     def calcularGrauAtivacao(self, x):
         graus = []
-        match self.fncs['tipo']:
-            case w if w in ['GS', 'SG', 'SS', 'ZS', 'CC', 'RT', 'LP']:
-                for f in self.fncs['funcs']:
+        for f in self.funcs:
+            match f['tipo']:
+                case w if w in ['GS', 'SG', 'SS', 'ZS', 'CC', 'RT', 'LP']:
                     graus.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], x))
-            case w if w in ['TR', 'SN', 'GD']:
-                for f in self.fncs['funcs']:
+                case w if w in ['TR', 'SN', 'GD']:
                     graus.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], f['values'][4], x))
-            case w if w in ['TP']:
-                for f in self.fncs['funcs']:
+                case w if w in ['TP']:
                     graus.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], f['values'][4], f['values'][5], x))
         return graus
 
     def plotarGrauAtivacao(self, x1, x2, directory):
         plt.figure(figsize=(10,8))
-        x = np.linspace(self.inf, self.sup, 250)
-        ys = []
-        match self.fncs['tipo']:
-            case w if w in ['GS', 'SG', 'SS', 'ZS', 'CC', 'RT', 'LP']:
-                for f in self.fncs['funcs']:
-                    y = []
+        x = np.linspace(self.inf, self.sup, 500)
+        for f in self.funcs:
+            y = []
+            match f['tipo']:
+                case w if w in ['GS', 'SG', 'SS', 'ZS', 'CC', 'RT', 'LP']:
                     for i in x:
                         y.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], i))
-                    ys.append(y)
-            case w if w in ['TR', 'SN', 'GD']:
-                for f in self.fncs['funcs']:
-                    y = []
+                case w if w in ['TR', 'SN', 'GD']:
                     for i in x:
                         y.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], f['values'][4], i))
-                    ys.append(y)
-            case w if w in ['TP']:
-                for f in self.fncs['funcs']:
-                    y = []
+                case w if w in ['TP']:
                     for i in x:
                         y.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], f['values'][4], f['values'][5], i))
-                    ys.append(y)
-        for y in ys:
             plt.plot(x, y)
-        plt.axvline(x1, color='cyan', linestyle='--', label=f'x={x1}')
-        plt.axvline(x2, color='purple', linestyle='--', label=f'x={x2}')
-        plt.title(self.fncs['name'])
+        plt.axvline(x1, linestyle='--', color='purple', label=f'x={x1}')
+        plt.axvline(x2, linestyle='--', color='black', label=f'x={x2}')
+        plt.title(self.name)
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
-        plt.savefig(directory + self.fncs['name'] + ".png")
+        plt.savefig(directory + self.name + ".png")
         plt.close()
 
-def gntTRfncs(inf, sup, centers, qtd):
+def gntTRfuncs(inf, sup, centers, qtd):
     scale = 100
     max = 3
     funcs = []
@@ -71,104 +61,112 @@ def gntTRfncs(inf, sup, centers, qtd):
             while c == b:
                 c = rd.randrange(int(b*scale), int((sup+max)*scale), 1) / scale
         f = {
+            'tipo': 'TR',
             'values': [inf, sup, a, b, c],
             'func': CalcularMiTR
         }
         funcs.append(f)
-    return {'tipo': 'TR', 'name': 'Triangular', 'funcs': funcs}
+    return ('Triangular', funcs)
 
-def gntGSfncs(inf, sup, centers, qtd):
+def gntGSfuncs(inf, sup, centers, qtd):
     scale = 100
     max = 5
+    min = 1
     funcs = []
     i = 0
     while i < qtd:
         c = centers[i]
         i += 1
-        sigma = rd.randrange(0, int(max*scale), 1) / scale
+        sigma = rd.randrange(min, int(max*scale), 1) / scale
         while sigma == 0:
-            sigma = rd.randrange(0, int(max*scale), 1) / scale
+            sigma = rd.randrange(min, int(max*scale), 1) / scale
         f = {
+            'tipo': 'GS',
             'values': [inf, sup, c, sigma],
             'func': CalcularMiGS
         }
         funcs.append(f)
-    return {'tipo': 'GS', 'name': 'Gaussiana', 'funcs': funcs}
+    return ('Gaussiana', funcs)
 
-def gntSGfncs(inf, sup, centers, qtd):
+def gntSGfuncs(inf, sup, centers, qtd):
     scale = 100
-    max = 5
+    a = rd.randrange(0, int(5*scale), 1) / scale
     funcs = []
     i = 0
     while i < qtd:
         c = centers[i]
         i += 1
-        a = rd.randrange(0, int(max*scale), 1) / scale
         f = {
+            'tipo': 'SG',
             'values': [inf, sup, a, c],
             'func': CalcularMiSG
         }
         funcs.append(f)
-    return {'tipo': 'SG', 'name': 'Sigmoidal', 'funcs': funcs}
+    return ('Sigmoidal', funcs)
 
-def gntCCfncs(inf, sup, centers, qtd):
+def gntCCfuncs(inf, sup, centers, qtd):
     scale = 100
-    max = 2
-    min = 0.3
+    gamma = rd.randrange(int(0.3*scale), int(2*scale), 1) / scale
+    while gamma == 0:
+        gamma = rd.randrange(int(0.3*scale), int(2*scale), 1) / scale
     funcs = []
     i = 0
     while i < qtd:
         x_0 = centers[i]
         i += 1
-        gamma = rd.randrange(int(min*scale), int(max*scale), 1) / scale
-        while gamma == 0:
-            gamma = rd.randrange(int(min*scale), int(max*scale), 1) / scale
         f = {
+            'tipo': 'CC',
             'values': [inf, sup, x_0, gamma],
             'func': CalcularMiCC
         }
         funcs.append(f)
-    return {'tipo': 'CC', 'name': 'Cauchy', 'funcs': funcs}
+    return ('Cauchy', funcs)
 
-def gntGDfncs(inf, sup, centers, qtd):
+def gntGDfuncs(inf, sup, centers, qtd):
     scale = 100
-    max = 6
+    sigma1 = rd.randrange(0, int(6*scale), 1) / scale
+    while sigma1 == 0:
+        sigma1 = rd.randrange(0, int(6*scale), 1) / scale
+    sigma2 = rd.randrange(0, int(6*scale), 1) / scale
+    while sigma2 == 0:
+        sigma2 = rd.randrange(0, int(6*scale), 1) / scale
     funcs = []
     i = 0
     while i < qtd:
         c = centers[i]
         i += 1
-        sigma1 = rd.randrange(0, int(max*scale), 1) / scale
-        while sigma1 == 0:
-            sigma1 = rd.randrange(0, int(max*scale), 1) / scale
-        sigma2 = rd.randrange(0, int(max*scale), 1) / scale
-        while sigma2 == 0:
-            sigma2 = rd.randrange(0, int(max*scale), 1) / scale
-        f = {
-            'values': [inf, sup, c, sigma1, sigma2],
-            'func': CalcularMiGD
-        }
+        if (rd.choice([1,2]) == 1):
+            f = {
+                'tipo': 'GD',
+                'values': [inf, sup, c, sigma1, sigma2],
+                'func': CalcularMiGD
+            }
+        else:
+            f = {
+                'tipo': 'GD',
+                'values': [inf, sup, c, sigma2, sigma1],
+                'func': CalcularMiGD
+            }
         funcs.append(f)
-    return {'tipo': 'GD', 'name': 'Gaussiana Dupla', 'funcs': funcs}
+    return ('Gaussiana Dupla', funcs)
 
-def gntLPfncs(inf, sup, centers, qtd):
+def gntLPfuncs(inf, sup, centers, qtd):
     scale = 100
-    max = 3
-    min = 0.5
+    b = rd.randrange(int(0.5*scale), int(3*scale), 1) / scale
     funcs = []
     i = 0
     while i < qtd:
         mi = centers[i]
         i += 1
-        b = rd.randrange(int(min*scale), int(max*scale), 1) / scale
         f = {
+            'tipo': 'LP',
             'values': [inf, sup, mi, b],
             'func': CalcularMiLP
         }
         funcs.append(f)
-    return {'tipo': 'LP', 'name': 'Laplace', 'funcs': funcs}
+    return ('Laplace', funcs)
 
-def gntTPfncs(inf, sup, numbers, qtd):
+def gntTPfuncs(inf, sup, numbers, qtd):
     scale = 100
     max =  3
     funcs = []
@@ -181,6 +179,7 @@ def gntTPfncs(inf, sup, numbers, qtd):
             a = rd.randrange(int((inf-max)*scale), int(b*scale), 1) / scale
             d = rd.randrange(int(c*scale), int((sup+max)*scale), 1) / scale
             f = {
+                'tipo': 'TP',
                 'values': [inf, sup, a, b, c, d],
                 'func': CalcularMiTP
             }
@@ -193,13 +192,14 @@ def gntTPfncs(inf, sup, numbers, qtd):
             a = rd.randrange(int((inf-max)*scale), int(b*scale), 1) / scale
             d = rd.randrange(int(c*scale), int((sup+max)*scale), 1) / scale
             f = {
+                'tipo': 'TP',
                 'values': [inf, sup, a, b, c, d],
                 'func': CalcularMiTP
             }
             funcs.append(f)
-    return {'tipo': 'TP', 'name': 'Trapezoidal', 'funcs': funcs}
+    return ('Trapezoidal', funcs)
 
-def gntSNfncs(inf, sup, numbers, qtd):
+def gntSNfuncs(inf, sup, numbers, qtd):
     scale = 100
     b = rd.randrange(int(1*scale), int(5*scale), 1) / scale
     funcs = []
@@ -212,6 +212,7 @@ def gntSNfncs(inf, sup, numbers, qtd):
             c = (p1 + p2) / 2
             a = abs(p2 - p1)
             f = {
+                'tipo': 'SN',
                 'values': [inf, sup, a, b, c],
                 'func': CalcularMiSN
             }
@@ -224,13 +225,14 @@ def gntSNfncs(inf, sup, numbers, qtd):
             c = (p1 + p2) / 2
             a = abs(p2 - p1)
             f = {
+                'tipo': 'SN',
                 'values': [inf, sup, a, b, c],
                 'func': CalcularMiSN
             }
             funcs.append(f)
-    return {'tipo': 'SN', 'name': 'Sino', 'funcs': funcs}
+    return ('Sino', funcs)
 
-def gntSSfncs(inf, sup, numbers, qtd):
+def gntSSfuncs(inf, sup, numbers, qtd):
     funcs = []
     i = 0
     if len(numbers) == qtd + 1:
@@ -239,6 +241,7 @@ def gntSSfncs(inf, sup, numbers, qtd):
             b = numbers[i+1]
             i += 1
             f = {
+                'tipo': 'SS',
                 'values': [inf, sup, a, b],
                 'func': CalcularMiSS
             }
@@ -249,13 +252,14 @@ def gntSSfncs(inf, sup, numbers, qtd):
             b = numbers[i+1]
             i += 2
             f = {
+                'tipo': 'SS',
                 'values': [inf, sup, a, b],
                 'func': CalcularMiSS
             }
             funcs.append(f)
-    return {'tipo': 'SS', 'name': 'S-shaped', 'funcs': funcs}
+    return ('S-shaped', funcs)
 
-def gntZSfncs(inf, sup, numbers, qtd):
+def gntZSfuncs(inf, sup, numbers, qtd):
     funcs = []
     i = 0
     if len(numbers) == qtd + 1:
@@ -264,6 +268,7 @@ def gntZSfncs(inf, sup, numbers, qtd):
             b = numbers[i+1]
             i += 1
             f = {
+                'tipo': 'ZS',
                 'values': [inf, sup, a, b],
                 'func': CalcularMiZS
             }
@@ -274,13 +279,14 @@ def gntZSfncs(inf, sup, numbers, qtd):
             b = numbers[i+1]
             i += 2
             f = {
+                'tipo': 'ZS',
                 'values': [inf, sup, a, b],
                 'func': CalcularMiZS
             }
             funcs.append(f)
-    return {'tipo': 'ZS', 'name': 'Z-shaped', 'funcs': funcs}
+    return ('Z-shaped', funcs)
 
-def gntRTfncs(inf, sup, numbers, qtd):
+def gntRTfuncs(inf, sup, numbers, qtd):
     funcs = []
     i = 0
     if len(numbers) == qtd + 1:
@@ -289,6 +295,7 @@ def gntRTfncs(inf, sup, numbers, qtd):
             b = numbers[i+1]
             i += 1
             f = {
+                'tipo': 'RT',
                 'values': [inf, sup, a, b],
                 'func': CalcularMiRT
             }
@@ -299,11 +306,12 @@ def gntRTfncs(inf, sup, numbers, qtd):
             b = numbers[i+1]
             i += 2
             f = {
+                'tipo': 'RT',
                 'values': [inf, sup, a, b],
                 'func': CalcularMiRT
             }
             funcs.append(f)
-    return {'tipo': 'RT', 'name': 'Retangular', 'funcs': funcs}
+    return ('Retangular', funcs)
 
 def gntDomain(inf, sup, function, qtd):
     domain = None
@@ -323,18 +331,19 @@ def gntDomain(inf, sup, function, qtd):
             
             match w:
                 case "TR":
-                    funcs = gntTRfncs(inf, sup, centers, qtd)
+                    name, funcs = gntTRfuncs(inf, sup, centers, qtd)
                 case "GS":
-                    funcs = gntGSfncs(inf, sup, centers, qtd)
+                    name, funcs = gntGSfuncs(inf, sup, centers, qtd)
                 case "SG":
-                    funcs = gntSGfncs(inf, sup, centers, qtd)
+                    name, funcs = gntSGfuncs(inf, sup, centers, qtd)
                 case "CC":
-                    funcs = gntCCfncs(inf, sup, centers, qtd)
+                    name, funcs = gntCCfuncs(inf, sup, centers, qtd)
                 case "GD":
-                    funcs = gntGDfncs(inf, sup, centers, qtd)
+                    name, funcs = gntGDfuncs(inf, sup, centers, qtd)
                 case "LP":
-                    funcs = gntLPfncs(inf, sup, centers, qtd)
-            domain = Domain(inf, sup, funcs)
+                    name, funcs = gntLPfuncs(inf, sup, centers, qtd)
+
+            domain = Domain(inf, sup, funcs, name)
 
         case w if w in ["TP", "SN", "SS", "ZS", "RT"]:
             points = rd.choice(['C', "M"])
@@ -358,16 +367,17 @@ def gntDomain(inf, sup, function, qtd):
 
             match w:
                 case "TP":
-                    funcs = gntTPfncs(inf, sup, numbers, qtd)
+                    name, funcs = gntTPfuncs(inf, sup, numbers, qtd)
                 case "SN":
-                    funcs = gntSNfncs(inf, sup, numbers, qtd)
+                    name, funcs = gntSNfuncs(inf, sup, numbers, qtd)
                 case "SS":
-                    funcs = gntSSfncs(inf, sup, numbers, qtd)
+                    name, funcs = gntSSfuncs(inf, sup, numbers, qtd)
                 case "ZS":
-                    funcs = gntZSfncs(inf, sup, numbers, qtd)
+                    name, funcs = gntZSfuncs(inf, sup, numbers, qtd)
                 case "RT":
-                    funcs = gntRTfncs(inf, sup, numbers, qtd)
-            domain = Domain(inf, sup, funcs)
+                    name, funcs = gntRTfuncs(inf, sup, numbers, qtd)
+
+            domain = Domain(inf, sup, funcs, name)
 
     return domain
 
@@ -376,22 +386,26 @@ def AcharGrauAtivacaoFuncoes(diterctory="data/imgs/domains/"):
     sup = 10
     qtd = rd.choice([4, 5, 6])
 
-    print("Valor de x1: ", end='')
+    print(f"Valor de x1 no domínio [{inf}, {sup}]: ", end='')
     x1 = float(input())
 
-    print("Valor de x2: ", end='')
+    print(f"Valor de x2 no domíno [{inf}, {sup}]: ", end='')
     x2 = float(input())
 
-    domains = []
-    for z in ["TR", "TP", "GS", "SG", "SN", "SS", "ZS", "CC", "GD", "RT", "LP"]:
-        d = gntDomain(inf, sup, z, qtd)
-        domains.append(d)
-        graus1 = d.calcularGrauAtivacao(x1)
-        graus2 = d.calcularGrauAtivacao(x2)
-        print(d.fncs['name'])
-        for g1, g2, i in zip(graus1, graus2, range(len(graus1))):
-            print(f"\t- mi{i+1}(x1 = {x1}) = {g1} \t - mi{i+1}(x2 = {x2}) = {g2}")
-        d.plotarGrauAtivacao(x1, x2, diterctory)
+    if (x1 >= inf and x1 <= sup and x2 >=inf and x2 <= sup):
+        f = open(diterctory + "resultados.txt", "w")
+        domains = []
+        for z in ["TR", "TP", "GS", "SG", "SN", "SS", "ZS", "CC", "GD", "RT", "LP"]:
+            d = gntDomain(inf, sup, z, qtd)
+            domains.append(d)
+            graus1 = d.calcularGrauAtivacao(x1)
+            graus2 = d.calcularGrauAtivacao(x2)
+            f.write(d.name + '\n')
+            for g1, g2, i in zip(graus1, graus2, range(len(graus1))):
+                f.write(f'f{i+1} - x={x1} = {g1:.4f} \t\t x={x2} = {g2:.4f}\n')
+            f.write('\n')
+            d.plotarGrauAtivacao(x1, x2, diterctory)
+        f.close()
+    else:
+        return None
     return domains
-
-domains = AcharGrauAtivacaoFuncoes()

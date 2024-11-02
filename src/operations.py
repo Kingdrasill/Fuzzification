@@ -1,9 +1,9 @@
-from domain import *
+from src.domain import *
 from functools import reduce
 
 def Complemento(domain, x):
     complements = []
-    for i in range(len(domain.fncs['funcs'])):
+    for i in range(len(domain.funcs)):
         complements.append([])
     for i in x:
         graus = domain.calcularGrauAtivacao(i)
@@ -96,30 +96,21 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
     for domain in domains:
         fig, ax = plt.subplots(2, 3, figsize=(12, 9))
 
-        x = np.linspace(domain.inf, domain.sup, 250)
-        ys = []
-        match domain.fncs['tipo']:
-            case w if w in ['GS', 'SG', 'SS', 'ZS', 'CC', 'RT', 'LP']:
-                for d in domain.fncs['funcs']:
-                    y = []
+        x = np.linspace(domain.inf, domain.sup, 500)
+        for f in domain.funcs:
+            y = []
+            match f['tipo']:
+                case w if w in ['GS', 'SG', 'SS', 'ZS', 'CC', 'RT', 'LP']:
                     for i in x:
-                        y.append(d['func'](d['values'][0], d['values'][1], d['values'][2], d['values'][3], i))
-                    ys.append(y)
-            case w if w in ['TR', 'SN', 'GD']:
-                for d in domain.fncs['funcs']:
-                    y = []
+                        y.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], i))
+                case w if w in ['TR', 'SN', 'GD']:
                     for i in x:
-                        y.append(d['func'](d['values'][0], d['values'][1], d['values'][2], d['values'][3], d['values'][4], i))
-                    ys.append(y)
-            case w if w in ['TP']:
-                for d in domain.fncs['funcs']:
-                    y = []
+                        y.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], f['values'][4], i))
+                case w if w in ['TP']:
                     for i in x:
-                        y.append(d['func'](d['values'][0], d['values'][1], d['values'][2], d['values'][3], d['values'][4], d['values'][5], i))
-                    ys.append(y)
-        for y in ys:
+                        y.append(f['func'](f['values'][0], f['values'][1], f['values'][2], f['values'][3], f['values'][4], f['values'][5], i))
             ax[0, 0].plot(x, y)
-        ax[0, 0].set_title(domain.fncs['name'])
+        ax[0, 0].set_title(domain.name)
         ax[0, 0].grid(True)
 
         cs = Complemento(domain, x)
@@ -129,7 +120,7 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
         ax[1, 0].grid(True)
 
         u = Uniao(domain, x)
-        ax[0, 1].plot(x, u, color="purple")
+        ax[0, 1].plot(x, u, color="red")
         ax[0, 1].set_title("União")
         ax[0, 1].grid(True)
 
@@ -142,13 +133,13 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
                 break
             s.append(snorm)
         if s != None:
-            ax[1, 1].plot(x, s, color="purple")
+            ax[1, 1].plot(x, s, color="green")
             ax[1, 1].set_title("S-norma Soma Probabilística")
             ax[1, 1].grid(True)
 
 
         i = Intersercao(domain, x)
-        ax[0, 2].plot(x, i, color="purple")
+        ax[0, 2].plot(x, i, color="blue")
         ax[0, 2].set_title("Interseção")
         ax[0, 2].grid(True)
 
@@ -166,6 +157,4 @@ def MostrarOpercacoes(domains, directory = "data/imgs/operations/"):
             ax[1, 2].grid(True)
         
         plt.tight_layout()
-        plt.savefig(directory + domain.fncs['name'] + ".png")
-
-MostrarOpercacoes(domains)
+        plt.savefig(directory + domain.name + ".png")

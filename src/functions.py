@@ -128,13 +128,13 @@ def CalcularMiLP(inf, sup, mi, b, x):
     
     return ((1 / (2 * b)) * math.exp(- (abs(x - mi)) / b))
 
-def AcharGrauPertinência():
-    f = open("data/functions.txt", "r")
+def AcharGrauPertinência(arquivo):
+    f = open(arquivo, "r")
 
     inf = 0
     sup = 10
 
-    print("Valor de x: ", end='')
+    print(f"Valor de x no domíno [{inf}, {sup}]: ", end='')
     x = float(input())
 
     for l in f:
@@ -207,5 +207,3 @@ def AcharGrauPertinência():
                 else:
                     print("Laplace: Está faltando valor da forma")
     f.close()
-
-AcharGrauPertinência()
